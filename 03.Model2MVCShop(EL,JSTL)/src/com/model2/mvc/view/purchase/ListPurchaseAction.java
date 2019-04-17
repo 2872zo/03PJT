@@ -60,7 +60,7 @@ public class ListPurchaseAction extends Action {
 		columList.add("회원ID");
 		columList.add("회원명");
 		columList.add("전화번호");
-		columList.add("배송현황");
+		columList.add("거래상태");
 		columList.add("정보수정");
 		
 		///UnitList 설정
@@ -84,6 +84,9 @@ public class ListPurchaseAction extends Action {
 			
 			//tranCode에 따른 상태값
 			switch(purchaseList.get(i).getTranCode()) {
+			case "0":
+				UnitDetail.add("구매취소");
+				break;
 			case "1":
 				UnitDetail.add("배송준비중");
 				break;

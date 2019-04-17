@@ -8,18 +8,20 @@ import com.model2.mvc.service.domain.Purchase;
 
 public interface PurchaseService {
 
-	public void addPurchase(Purchase purchaseVO) throws Exception;
+	public void addPurchase(Purchase purchase) throws Exception;
 	
 	public Purchase getPurchase(int tranNo) throws Exception;
 	
 	public Purchase getPurchase2(int prodNo) throws Exception;
 	
-	public Map<String,Object> getPurchaseList(Search searchVO,String buyerId) throws Exception;
+	public Map<String,Object> getPurchaseList(Search search,String buyerId) throws Exception;
 	
-	public Map<String,Object> getSaleList(Search searchVO) throws Exception;
+	public Map<String,Object> getSaleList(Search search) throws Exception;
 	
-	public void updatePurcahse(Purchase purchaseVO) throws Exception;
+	public void updatePurchase(Purchase purchase) throws Exception;
 	
-	public void updateTranCode(Purchase purchaseVO) throws Exception;
+	public void updateTranCode(Purchase purchase) throws Exception;
+	
+	public void cancelPurchase(Purchase purchase) throws Exception;
 	
 }

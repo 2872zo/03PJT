@@ -31,7 +31,7 @@ public class GetPurchaseAction extends Action{
 		
 		List<String> purchaseList = new ArrayList<String>();
 		purchaseList.add("구매 상세 조회");
-		purchaseList.add("물품번호,"+purchase.getPurchaseProd().getProdName());
+		purchaseList.add("물품번호,"+purchase.getPurchaseProd().getProdNo());
 		purchaseList.add("구매자아이디,"+purchase.getBuyer().getUserId());
 		purchaseList.add("구매방법,"+paymentOption);
 		purchaseList.add("구매자이름,"+purchase.getReceiverName());

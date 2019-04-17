@@ -45,8 +45,14 @@ public class ProductDAO {
 
 		// 2.DB에 보낼 DML 작성 및 값 설정
 		String sql = "SELECT"
-				+ " p.prod_no, p.prod_name, p.prod_detail, p.manufacture_day, p.price, p.image_file, p.reg_date, t.tran_status_code"
-				+ " FROM product p, transaction t" + " WHERE p.prod_no = t.prod_no(+)" + " AND p.prod_no = ?";
+				+ " p.*, t.tran_status_code"
+				+ " FROM product p, (SELECT "
+									+ "	prod_no, tran_status_code "
+									+ " FROM transaction t "
+									+ " WHERE tran_status_code != 0 "
+									+ " OR tran_status_code is null) t" 
+				+ " WHERE p.prod_no = t.prod_no(+)"
+				+ " AND p.prod_no = ?";
 		PreparedStatement stmt = con.prepareStatement(sql);
 		stmt.setInt(1, prodNo);
 		
@@ -79,7 +85,12 @@ public class ProductDAO {
 		Connection con = DBUtil.getConnection();
 
 		// 2.DB에 보낼 DML 작성 및 값 설정
-		String sql = "SELECT " + " p.*, t.tran_status_code" + " FROM product p, transaction t"
+		String sql = "SELECT"
+				+ " p.*, t.tran_status_code"
+				+ " FROM product p, (SELECT "
+									+ "	prod_no, tran_status_code "
+									+ " FROM transaction t "
+									+ " WHERE tran_status_code != 0) t"
 				+ " WHERE p.prod_no = t.prod_no(+)";
 		if (!CommonUtil.null2str(search.getSearchKeyword()).equals("")) {
 			if (search.getSearchCondition().equals("0")) {
@@ -163,7 +174,7 @@ public class ProductDAO {
 	// 게시판 Page 처리를 위한 전체 Row(totalCount) return
 	private int getTotalCount(String sql) throws Exception {
 
-		sql = "SELECT COUNT(*) " + "FROM ( " + sql + ") countTable";
+		sql = "SELECT COUNT(*) FROM ( " + sql + ") countTable";
 
 		Connection con = DBUtil.getConnection();
 		PreparedStatement pStmt = con.prepareStatement(sql);

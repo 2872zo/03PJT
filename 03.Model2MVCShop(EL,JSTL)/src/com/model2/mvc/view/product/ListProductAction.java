@@ -99,7 +99,6 @@ public class ListProductAction extends Action {
 					case "1":
 						String aTagUpdateTranCodeStart = "<a href=\"javascript:fncUpdateTranCodeByProd("+ resultPage.getCurrentPage() + "," + productList.get(i).getProTranCode() +");\">";
 						UnitDetail.add("배송준비중&nbsp;" + aTagUpdateTranCodeStart + "배송 출발"+aTagEnd);
-						
 						break;
 					case "2":
 						UnitDetail.add("배송중");

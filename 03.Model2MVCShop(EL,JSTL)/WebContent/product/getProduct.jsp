@@ -32,7 +32,7 @@ function fncGetAddPurchaseView(prodNo){
 
 		<table border="0" cellspacing="0" cellpadding="0">
 			<tr>
-				<c:if test="${user.role eq 'user' && empty product.proTranCode}">
+				<c:if test="${user.role eq 'user' && (empty product.proTranCode || product.proTranCode eq '1')}">
 					<td width="17" height="23">
 						<img src="/images/ct_btnbg01.gif" width="17" height="23"/>
 					</td>

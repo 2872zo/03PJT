@@ -26,7 +26,6 @@
 	<tr>
 		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
 	</tr>
-	
 	<c:forEach var="list" items="${list}" begin="1">
 		<c:set var="splitList" value="${fn:split(list,',')}" />
 		<tr>

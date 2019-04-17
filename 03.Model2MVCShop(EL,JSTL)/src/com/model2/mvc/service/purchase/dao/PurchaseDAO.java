@@ -3,6 +3,7 @@ package com.model2.mvc.service.purchase.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -118,7 +119,8 @@ public class PurchaseDAO {
 				" from users u, product p, transaction t" + 
 				" where t.prod_no = p.prod_no" + 
 				" AND u.user_id = t.buyer_id" +
-				" AND t.buyer_id = '" + buyerId + "'";
+				" AND t.buyer_id = '" + buyerId + "'" +
+				" ORDER BY t.tran_no";
 
 		// 3. 총 Row수 구함
 		int totalUnit = getTotalCount(sql);
@@ -255,6 +257,19 @@ public class PurchaseDAO {
 		con.close();
 	}
 
+	
+	public void cancelPurchase(Purchase purchase) throws Exception {
+		Connection con = DBUtil.getConnection();
+		
+		String sql = "UPDATE transaction SET tran_status_code = ? WHERE tran_no = ?";
+		PreparedStatement stmt = con.prepareStatement(sql);
+		stmt.setString(1, "0");
+		stmt.setInt(2, purchase.getTranNo());
+		
+		System.out.println("cancelPurchase : " + stmt.executeUpdate());
+	}
+	
+	
 	// 게시판 Page 처리를 위한 전체 Row(totalCount) return
 	private int getTotalCount(String sql) throws Exception {
 
@@ -287,4 +302,5 @@ public class PurchaseDAO {
 
 		return sql;
 	}
+
 }

@@ -47,7 +47,7 @@ public class PurchaseServiceImpl implements PurchaseService{
 
 	//구매 정보 수정
 	@Override
-	public void updatePurcahse(Purchase purchase) throws Exception {
+	public void updatePurchase(Purchase purchase) throws Exception {
 		purchaseDAO.updatePurchase(purchase);
 	}
 
@@ -55,6 +55,12 @@ public class PurchaseServiceImpl implements PurchaseService{
 	@Override
 	public void updateTranCode(Purchase purchase) throws Exception {
 		purchaseDAO.updateTranCode(purchase);
+	}
+
+	@Override
+	public void cancelPurchase(Purchase purchase) throws Exception {
+		purchaseDAO.cancelPurchase(purchase);
+		
 	}
 
 }
