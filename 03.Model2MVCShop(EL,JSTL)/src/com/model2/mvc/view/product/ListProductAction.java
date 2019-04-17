@@ -54,6 +54,10 @@ public class ListProductAction extends Action {
 		search.setPageSize(pageSize);
 		//sortCode
 		search.setSortCode(request.getParameter("sortCode") != null ? Integer.parseInt(request.getParameter("sortCode")) : 0);
+		//hiddingEmptyStock
+		System.out.println("hidding : " + request.getParameter("hiddingEmptyStock"));
+		search.setHiddingEmptyStock(Boolean.valueOf(request.getParameter("hiddingEmptyStock") != null? request.getParameter("hiddingEmptyStock") : "false" ));
+		System.out.println("hidding 처리후 : " + search.isHiddingEmptyStock());
 
 		///4.DB에 접속하여 결과값을 Map으로 가져옴
 		ProductService service = new ProductServiceImpl();

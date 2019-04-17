@@ -9,6 +9,7 @@ public class Search {
 	private String searchKeyword;
 	private int pageSize;
 	private int sortCode;
+	private boolean hiddingEmptyStock;
 	
 	///Constructor
 	public Search() {
@@ -48,6 +49,14 @@ public class Search {
 
 	public void setSortCode(int sortCode) {
 		this.sortCode = sortCode;
+	}
+
+	public boolean isHiddingEmptyStock() {
+		return hiddingEmptyStock;
+	}
+
+	public void setHiddingEmptyStock(boolean hiddingEmptyStock) {
+		this.hiddingEmptyStock = hiddingEmptyStock;
 	}
 
 	@Override

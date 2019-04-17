@@ -86,6 +86,12 @@ public class ProductDAO {
 									+ " FROM transaction t "
 									+ " WHERE tran_status_code != 0) t"
 				+ " WHERE p.prod_no = t.prod_no(+)";
+		//재고 유무 처리 여부
+		if(search.isHiddingEmptyStock()) {
+			System.out.println("재고없음 처리됨");
+			sql += "AND t.tran_status_code IS NULL";
+		}
+		//search옵션 유무
 		if (!CommonUtil.null2str(search.getSearchKeyword()).equals("")) {
 			if (search.getSearchCondition().equals("0")) {
 				sql += " AND p.prod_no = '" + search.getSearchKeyword() + "'";
@@ -95,7 +101,7 @@ public class ProductDAO {
 				sql += " AND p.price = '" + search.getSearchKeyword() + "'";
 			}
 		}
-		
+		//colum별 sort
 		switch (search.getSortCode()) {
 		case 1:
 			sql += " ORDER BY p.prod_no desc";
