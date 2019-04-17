@@ -25,25 +25,27 @@ public class ListPurchaseAction extends Action {
 		PurchaseService service = new PurchaseServiceImpl();
 		User user = (User)request.getSession().getAttribute("user");
 
+		//1.page나 currentPage로 넘어온 현재페이지 값을 가져옴
 		int currentPage = 1;
-
 		if (request.getParameter("page") != null) {
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		} else if (request.getParameter("currentPage") != null) {
 			currentPage = Integer.parseInt(request.getParameter("currentPage"));
 		}
 
+		//2.페이지당 출력할 Unit의 Size = pageSize
 		int pageSize = Integer.parseInt(getServletContext().getInitParameter("pageSize"));
 
-		//DB 접속을 위한 search
+		//3.DB 접속을 위한 search
 		Search search = new Search();
 		search.setCurrentPage(currentPage);
 		search.setPageSize(pageSize);
 
-		//DB에 접속하여 결과를 Map으로 가져옴
+		///4.DB에 접속하여 결과값을 Map으로 가져옴
 		Map<String, Object> map = service.getPurchaseList(search, user.getUserId());
 
-		//pageView를 위한 객체
+		
+		///5.pageView를 위한 객체
 		Page resultPage = new Page(currentPage, ((Integer) map.get("count")).intValue(),
 				Integer.parseInt(getServletContext().getInitParameter("pageUnit")), pageSize);
 		
@@ -51,10 +53,11 @@ public class ListPurchaseAction extends Action {
 		System.out.println("ListPurchaseAction-list.size() : " + ((List)map.get("list")).size());
 		
 		
-		///title 설정
+		///6.JSP에 출력을 하기위한 설정들
+		//title 설정
 		String title = "구매 목록 조회";
 		
-		///colum 설정
+		//colum 설정
 		List<String> columList = new ArrayList<String>();
 		columList.add("No");
 		columList.add("회원ID");
@@ -63,7 +66,7 @@ public class ListPurchaseAction extends Action {
 		columList.add("거래상태");
 		columList.add("정보수정");
 		
-		///UnitList 설정
+		//UnitList 설정
 		List<List> unitList = new Vector<List>();
 		List<String> UnitDetail = null;
 		List<Purchase> purchaseList = (List<Purchase>)map.get("list");
@@ -97,21 +100,21 @@ public class ListPurchaseAction extends Action {
 				UnitDetail.add("거래완료");
 				break;
 			}
-			//배송중인 경우에만 수취완료 가능
+			//배송중인 경우에만 수취완료 표기
 			if(purchaseList.get(i).getTranCode().equals("2")) {
 				UnitDetail.add("<a href='javascript:fncUpdatePurchaseCode(" + resultPage.getCurrentPage() + "," + purchaseList.get(i).getTranNo() + ");'>" + "수취확인</a>");
 			}
-			
 			unitList.add(UnitDetail);
 		}
 		
-		///출력을 위한 Map
+		//출력을 위한 Map 설정
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("title", title);
 		resultMap.put("columList", columList);
 		resultMap.put("unitList", unitList);
 		
-		/// M,V 연결
+		
+		///7. M,V 연결
 		request.setAttribute("map", resultMap);
 		request.setAttribute("resultPage", resultPage);
 

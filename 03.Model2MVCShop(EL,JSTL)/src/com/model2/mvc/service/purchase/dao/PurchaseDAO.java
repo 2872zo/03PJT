@@ -256,19 +256,6 @@ public class PurchaseDAO {
 		stmt.close();
 		con.close();
 	}
-
-	
-	public void cancelPurchase(Purchase purchase) throws Exception {
-		Connection con = DBUtil.getConnection();
-		
-		String sql = "UPDATE transaction SET tran_status_code = ? WHERE tran_no = ?";
-		PreparedStatement stmt = con.prepareStatement(sql);
-		stmt.setString(1, "0");
-		stmt.setInt(2, purchase.getTranNo());
-		
-		System.out.println("cancelPurchase : " + stmt.executeUpdate());
-	}
-	
 	
 	// 게시판 Page 처리를 위한 전체 Row(totalCount) return
 	private int getTotalCount(String sql) throws Exception {

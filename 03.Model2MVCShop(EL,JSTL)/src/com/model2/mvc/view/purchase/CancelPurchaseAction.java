@@ -16,8 +16,9 @@ public class CancelPurchaseAction extends Action{
 		
 		Purchase purchase = new Purchase();
 		purchase.setTranNo(Integer.parseInt(request.getParameter("tranNo")));
+		purchase.setTranCode("0");
 		
-		purchaseService.cancelPurchase(purchase);
+		purchaseService.updateTranCode(purchase);
 		
 		return "redirect:/listPurchase.do";
 	}

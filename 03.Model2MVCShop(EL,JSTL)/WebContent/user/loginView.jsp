@@ -89,7 +89,8 @@
                 </td>
                 <td height="30">                    
                     <input 	type="password" name="password" id="password" class="ct_input_g" 
-                    				style="width:180px; height:19px"  maxLength="50" />
+                    				style="width:180px; height:19px"  maxLength="50"  
+                    				onkeypress="if( event.keyCode==13 ){javascript:fncLogin();}"/>
                 </td>
                 <td width="20" height="30">&nbsp;</td>
               </tr>

@@ -2,6 +2,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+
 <table width="100%" height="37" border="0" cellpadding="0"	cellspacing="0">
 	<tr>
 		<td width="15" height="37">
@@ -23,36 +24,7 @@
 </table>
 
 
-<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
-	<tr>
-		<c:if test="${empty map.search}">
-		<td align="right">
-			<select name="searchCondition" class="ct_input_g" style="width:80px" id="searchCondition">
-				<option value="0" ${(!empty search.searchKeyword && search.searchCondition eq 0)?"selected='selected'":""}>상품번호</option>
-				<option value="1" ${(!empty search.searchKeyword && search.searchCondition eq 1)?"selected='selected'":""}>상품명</option>
-				<option value="2" ${(!empty search.searchKeyword && search.searchCondition eq 2)?"selected='selected'":""}>상품가격</option>				
-			</select>
-			<input type="text" name="searchKeyword" id="searchKeyword" onkeypress="if( event.keyCode==13 ){javascript:fncGetProductList(${resultPage.currentPage});}" class="ct_input_g" style="width:200px; height:19px" value="${!empty search.searchKeyword?search.searchKeyword:''}"/>
-		</td>
-	
-		<td align="right" width="70">
-			<table border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td width="17" height="23">
-						<img src="/images/ct_btnbg01.gif" width="17" height="23">
-					</td>
-					<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
-						<a href="javascript:fncGet${domainName}List(${resultPage.currentPage});">검색</a>
-					</td>
-					<td width="14" height="23">
-						<img src="/images/ct_btnbg03.gif" width="14" height="23">
-					</td>
-				</tr>
-			</table>
-		</td>
-		</c:if>
-	</tr>
-</table>
+<c:import url="../common/searchPrinter.jsp"/>
 
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">

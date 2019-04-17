@@ -25,9 +25,22 @@ public class ListProductAction extends Action {
 
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		///1.page나 currentPage로 넘어온 현재페이지 값을 가져옴
+		int currentPage = 1;
+		if (request.getParameter("page") != null) {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		} else if (request.getParameter("currentPage") != null) {
+			currentPage = Integer.parseInt(request.getParameter("currentPage"));
+		}
+		
+		///2.페이지당 출력할 Unit의 Size = pageSize
+		int pageSize = Integer.parseInt(getServletContext().getInitParameter("pageSize"));
+		
+		///3.출력을 위한 search조건 담은 Search객체 생성 및 값 할당
 		Search search = new Search();
-
+		//searchCondition
 		search.setSearchCondition(request.getParameter("searchCondition"));
+		//searchKeyword
 		if (!(CommonUtil.null2str(request.getParameter("searchKeyword")).equals(""))) {
 			if (request.getMethod().equals("GET")) {
 				search.setSearchKeyword(HttpUtil.convertKo(request.getParameter("searchKeyword")));
@@ -35,30 +48,31 @@ public class ListProductAction extends Action {
 				search.setSearchKeyword(request.getParameter("searchKeyword"));
 			}
 		}
-
-		int currentPage = 1;
-		if (request.getParameter("page") != null) {
-			currentPage = Integer.parseInt(request.getParameter("page"));
-		} else if (request.getParameter("currentPage") != null) {
-			currentPage = Integer.parseInt(request.getParameter("currentPage"));
-		}
-
+		//currentPage
 		search.setCurrentPage(currentPage);
-
-		int pageSize = Integer.parseInt(getServletContext().getInitParameter("pageSize"));
+		//pageSize		
 		search.setPageSize(pageSize);
 
+		///4.DB에 접속하여 결과값을 Map으로 가져옴
 		ProductService service = new ProductServiceImpl();
 		Map<String, Object> map = service.getProductList(search);
 
+		///5.pageView를 위한 객체
 		Page resultPage = new Page(currentPage, ((Integer) map.get("count")).intValue(),
 				Integer.parseInt(getServletContext().getInitParameter("pageUnit")), pageSize);
-		System.out.println(resultPage);
+
+		System.out.println("ListProductAction-resultPage : " + resultPage);
+		System.out.println("ListProductAction-list.size() : " + ((List)map.get("list")).size());
 		
-		String aTagEnd = "</a>";
 		
-		///title 설정
-		//menu의 값에 따른 출력 구별
+		///6.JSP에 출력을 하기위한 설정들
+		//searchOptionList 설정
+		List<String> searchOptionList = new Vector<String>();
+		searchOptionList.add("상품번호");
+		searchOptionList.add("상품명");
+		searchOptionList.add("상품가격");
+		
+		//title 설정
 		String title = null;
 		if(request.getParameter("menu").equals("search")) {
 			title = "상품 목록 조회";
@@ -66,7 +80,7 @@ public class ListProductAction extends Action {
 			title = "판매 목록 관리";
 		}
 		
-		///colum 설정
+		//colum 설정
 		List<String> columList = new ArrayList<String>();
 		columList.add("No");
 		columList.add("상품명");
@@ -74,10 +88,11 @@ public class ListProductAction extends Action {
 		columList.add("등록일");
 		columList.add("현재상태");
 		
-		///UnitList 설정
+		//UnitList 설정
 		List<List> unitList = new Vector<List>();
 		List<String> UnitDetail = null;
 		List<Product> productList = (List<Product>)map.get("list");
+		String aTagEnd = "</a>";
 		for(int i =0; i<productList.size();i++) {
 			System.out.println(productList.get(i));
 			UnitDetail = new Vector<String>();
@@ -110,22 +125,21 @@ public class ListProductAction extends Action {
 				}else {
 					UnitDetail.add("재고없음");
 				}
-			
 			}else {
 				UnitDetail.add("판매중");
 			}
-			
 			unitList.add(UnitDetail);
 		}
 		
-		
-		///출력을 위한 Map
+		//출력을 위한 Map 설정
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("title", title);
 		resultMap.put("columList", columList);
 		resultMap.put("unitList", unitList);
 		
-		/// M,V 연결
+		
+		///7. M,V 연결
+		request.setAttribute("searchOptionList", searchOptionList);
 		request.setAttribute("map", resultMap);
 		request.setAttribute("search", search);
 		request.setAttribute("resultPage", resultPage);
