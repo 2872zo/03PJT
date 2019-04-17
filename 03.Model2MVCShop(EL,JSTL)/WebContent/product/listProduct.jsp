@@ -29,6 +29,24 @@ function fncGetProductList(currentPage){
 	document.detailForm.submit();
 }
 
+function fncSortProductList(currentPage, sortCode){
+	document.detailForm.currentPage.value = currentPage;
+	document.detailForm.menu.value = "${param.menu}";
+	document.detailForm.sortCode.value = sortCode;
+	
+	//검색 조건 Validation Check
+	if(document.detailForm.searchCondition.value != 1){
+		if(isNaN(document.detailForm.searchKeyword.value)){
+			alert("숫자만 가능합니다.")
+			return;
+		}
+	}
+
+	document.detailForm.submit();
+}
+
+
+
 function fncUpdateTranCodeByProd(currentPage, prodNo){
 	document.detailForm.currentPage.value = currentPage;
 	document.detailForm.menu.value = "${param.menu}";
@@ -67,10 +85,26 @@ function fncUpdateTranCodeByProd(currentPage, prodNo){
 		<td align="center">
 			<input type="hidden" id="currentPage" name="currentPage" value=""/>
 			<input type="hidden" id="menu" name="menu" value=""/>
+			<input type="hidden" id="sortCode" name="sortCode" value="${search.sortCode}"/>
 			
 			<c:import url="../common/pageNavigator.jsp">
 				<c:param name="domainName" value="Product"/>
 			</c:import>	
+		</td>
+	</tr>
+	<tr>
+		<td align="center">
+			<a href="javascript:fncSortProductList(${resultPage.currentPage},0)">상품 번호 오름차순</a>
+			&nbsp;
+			<a href="javascript:fncSortProductList(${resultPage.currentPage},1)">상품 번호 내림차순</a>
+			&nbsp;
+			<a href="javascript:fncSortProductList(${resultPage.currentPage},2)">상품 이름 오름차순</a>
+			&nbsp;
+			<a href="javascript:fncSortProductList(${resultPage.currentPage},3)">상품 이름 내림차순</a>
+			&nbsp;
+			<a href="javascript:fncSortProductList(${resultPage.currentPage},4)">가격 낮은순</a>
+			&nbsp;
+			<a href="javascript:fncSortProductList(${resultPage.currentPage},5)">가격 높은순</a>
 		</td>
 	</tr>
 </table>

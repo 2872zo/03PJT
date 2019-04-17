@@ -44,18 +44,12 @@ public class ProductDAO {
 		Connection con = DBUtil.getConnection();
 
 		// 2.DB에 보낼 DML 작성 및 값 설정
-		String sql = "SELECT"
-				+ " p.*, t.tran_status_code"
-				+ " FROM product p, (SELECT "
-									+ "	prod_no, tran_status_code "
-									+ " FROM transaction t "
-									+ " WHERE tran_status_code != 0 "
-									+ " OR tran_status_code is null) t" 
-				+ " WHERE p.prod_no = t.prod_no(+)"
-				+ " AND p.prod_no = ?";
+		String sql = "SELECT" + " p.*, t.tran_status_code" + " FROM product p, (SELECT "
+				+ "	prod_no, tran_status_code " + " FROM transaction t " + " WHERE tran_status_code != 0 "
+				+ " OR tran_status_code is null) t" + " WHERE p.prod_no = t.prod_no(+)" + " AND p.prod_no = ?";
 		PreparedStatement stmt = con.prepareStatement(sql);
 		stmt.setInt(1, prodNo);
-		
+
 		ResultSet rs = stmt.executeQuery();
 
 		// 3. 결과값을 ProductVO에 담아서 전달
@@ -101,7 +95,26 @@ public class ProductDAO {
 				sql += " AND p.price = '" + search.getSearchKeyword() + "'";
 			}
 		}
-		sql += " ORDER BY p.prod_no";
+		
+		switch (search.getSortCode()) {
+		case 1:
+			sql += " ORDER BY p.prod_no desc";
+			break;
+		case 2:
+			sql += " ORDER BY p.prod_name";
+			break;
+		case 3:
+			sql += " ORDER BY p.prod_name desc";
+			break;
+		case 4:
+			sql += " ORDER BY p.price";
+			break;
+		case 5:
+			sql += " ORDER BY p.price desc";
+			break;
+		default:
+			sql += " ORDER BY p.prod_no";
+		}
 		
 		System.out.println("search.getSearchKeyword() : " + CommonUtil.null2str(search.getSearchKeyword()));
 		
@@ -153,8 +166,9 @@ public class ProductDAO {
 		// 1.DBUtil을 이용하여 DB연결
 		Connection con = DBUtil.getConnection();
 
-		System.out.println("update 중 CommonUtil.toDateStr(product.getManuDate()) : " + CommonUtil.toDateStr(product.getManuDate()));
-		
+		System.out.println("update 중 CommonUtil.toDateStr(product.getManuDate()) : "
+				+ CommonUtil.toDateStr(product.getManuDate()));
+
 		// 2.DB에 보낼 DML 작성 및 값 설정
 		String sql = "UPDATE product set prod_name = ?, prod_detail = ?, manufacture_day =?, price = ?, image_file = ? WHERE prod_no = ?";
 		PreparedStatement stmt = con.prepareStatement(sql);
@@ -192,15 +206,14 @@ public class ProductDAO {
 		return totalCount;
 	}
 
-	// 게시판 currentPage Row 만  return 
-	private String makeCurrentPageSql(String sql , Search search){
-		sql = 	"SELECT * "+ 
-				"FROM (		SELECT inner_table. * ,  ROWNUM AS row_seq " +
-				" 	FROM (	"+sql+" ) inner_table "+
-				"	WHERE ROWNUM <="+search.getCurrentPage()*search.getPageSize()+" ) " +
-				"WHERE row_seq BETWEEN "+((search.getCurrentPage()-1)*search.getPageSize()+1) +" AND "+search.getCurrentPage()*search.getPageSize();
+	// 게시판 currentPage Row 만 return
+	private String makeCurrentPageSql(String sql, Search search) {
+		sql = "SELECT * " + "FROM (		SELECT inner_table. * ,  ROWNUM AS row_seq " + " 	FROM (	" + sql
+				+ " ) inner_table " + "	WHERE ROWNUM <=" + search.getCurrentPage() * search.getPageSize() + " ) "
+				+ "WHERE row_seq BETWEEN " + ((search.getCurrentPage() - 1) * search.getPageSize() + 1) + " AND "
+				+ search.getCurrentPage() * search.getPageSize();
 
-		System.out.println("UserDAO :: make SQL :: "+ sql);	
+		System.out.println("UserDAO :: make SQL :: " + sql);
 
 		return sql;
 	}

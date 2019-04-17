@@ -52,6 +52,8 @@ public class ListProductAction extends Action {
 		search.setCurrentPage(currentPage);
 		//pageSize		
 		search.setPageSize(pageSize);
+		//sortCode
+		search.setSortCode(request.getParameter("sortCode") != null ? Integer.parseInt(request.getParameter("sortCode")) : 0);
 
 		///4.DB에 접속하여 결과값을 Map으로 가져옴
 		ProductService service = new ProductServiceImpl();
