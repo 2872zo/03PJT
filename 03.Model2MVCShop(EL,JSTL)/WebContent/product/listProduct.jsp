@@ -14,16 +14,35 @@
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
 <script type="text/javascript">
+function fncValidationCheck(){
+	var result = true;
+	
+	if(document.detailForm.searchCondition.value != 1 && document.detailForm.searchKeyword.value != null){
+		var splitSearchKeyword = document.detailForm.searchKeyword.value.split(',');
+		
+		if(splitSearchKeyword.length > 2){
+			alert(" ','를 이용하여 2개의 범위값을 지정해 주십시오");
+		}
+		for(var i = 0; i < splitSearchKeyword.length; i++){
+			if(isNaN(splitSearchKeyword[i])){
+				alert("숫자만 가능합니다.")
+				result = false;
+				break;
+			}
+			
+		}
+	}
+	
+	return result;
+}
+
 function fncGetProductList(currentPage){
 	document.detailForm.currentPage.value = currentPage;
 	document.detailForm.menu.value = "${param.menu}";
 	
 	//검색 조건 Validation Check
-	if(document.detailForm.searchCondition.value != 1){
-		if(isNaN(document.detailForm.searchKeyword.value)){
-			alert("숫자만 가능합니다.")
-			return;
-		}
+	if(!fncValidationCheck()){
+		return;
 	}
 
 	document.detailForm.submit();
@@ -35,11 +54,8 @@ function fncSortProductList(currentPage, sortCode){
 	document.detailForm.sortCode.value = sortCode;
 	
 	//검색 조건 Validation Check
-	if(document.detailForm.searchCondition.value != 1){
-		if(isNaN(document.detailForm.searchKeyword.value)){
-			alert("숫자만 가능합니다.")
-			return;
-		}
+	if(!fncValidationCheck()){
+		return;
 	}
 
 	document.detailForm.submit();
@@ -51,15 +67,17 @@ function fncHiddingEmptyStock(currentPage, hiddingEmptyStock){
 	document.detailForm.hiddingEmptyStock.value = hiddingEmptyStock;
 	
 	//검색 조건 Validation Check
-	if(document.detailForm.searchCondition.value != 1){
-		if(isNaN(document.detailForm.searchKeyword.value)){
-			alert("숫자만 가능합니다.")
-			return;
-		}
+	if(!fncValidationCheck()){
+		return;
 	}
 
 	document.detailForm.submit();
 	
+}
+
+
+function fncResetSearchCondition(){
+	location.href = "/listProduct.do?menu=${param.menu}";
 }
 
 
@@ -69,11 +87,8 @@ function fncUpdateTranCodeByProd(currentPage, prodNo){
 	document.detailForm.menu.value = "${param.menu}";
 	
 	//검색 조건 Validation Check
-	if(document.detailForm.searchCondition.value != 1){
-		if(isNaN(document.detailForm.searchKeyword.value)){
-			alert("숫자만 가능합니다.");
-			return;
-		}
+	if(!fncValidationCheck()){
+		return;
 	}
 	
 	var URI = "/updateTranCodeByProd.do?page=" + currentPage + "&menu=" + "${param.menu}" + "&prodNo=" + prodNo + "&tranCode=2";
@@ -84,6 +99,8 @@ function fncUpdateTranCodeByProd(currentPage, prodNo){
 	
 	location.href = URI;
 }
+
+
 </script>
 </head>
 
@@ -132,9 +149,12 @@ function fncUpdateTranCodeByProd(currentPage, prodNo){
 			<a href="javascript:fncHiddingEmptyStock(${resultPage.currentPage},false)">재고없는 상품 보기</a>
 		</td>
 	</tr>
+	<tr>
+		<td align="center">
+			<a href="javascript:fncResetSearchCondition();">검색 조건 초기화</a>
+		</td>
+	</tr>
 </table>
-<!--  페이지 Navigator 끝 -->
-
 </form>
 
 </div>

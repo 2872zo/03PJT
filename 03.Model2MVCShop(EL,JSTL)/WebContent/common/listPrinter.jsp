@@ -24,7 +24,9 @@
 </table>
 
 
-<c:import url="../common/searchPrinter.jsp"/>
+<c:import url="../common/searchPrinter.jsp">
+	<c:param name="domainName" value="${param.domainName}"/>
+</c:import>
 
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">

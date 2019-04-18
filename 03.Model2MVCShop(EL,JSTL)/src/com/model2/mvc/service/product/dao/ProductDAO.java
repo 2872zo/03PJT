@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -93,12 +95,21 @@ public class ProductDAO {
 		}
 		//search옵션 유무
 		if (!CommonUtil.null2str(search.getSearchKeyword()).equals("")) {
+			List splitKeyword = Arrays.asList(search.getSearchKeyword().split(","));
 			if (search.getSearchCondition().equals("0")) {
-				sql += " AND p.prod_no = '" + search.getSearchKeyword() + "'";
+				if(splitKeyword.size() == 1) {
+					sql += " AND p.prod_no = '" + search.getSearchKeyword() + "'";
+				}else {
+					sql += " AND p.prod_no BETWEEN " + Collections.min(splitKeyword) + " AND " + Collections.max(splitKeyword);
+				}
 			} else if (search.getSearchCondition().equals("1")) {
 				sql += " AND p.prod_name like '%" + search.getSearchKeyword() + "%'";
 			} else if (search.getSearchCondition().equals("2")) {
-				sql += " AND p.price = '" + search.getSearchKeyword() + "'";
+				if(search.getSearchKeyword().split(",").length == 1) {
+					sql += " AND p.price = '" + search.getSearchKeyword() + "'";
+				}else {
+					sql += " AND p.price BETWEEN " + Collections.min(splitKeyword) + " AND " + Collections.max(splitKeyword);
+				}
 			}
 		}
 		//colum별 sort
