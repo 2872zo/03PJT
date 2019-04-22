@@ -25,9 +25,8 @@ public class ProductDAO {
 		Connection con = DBUtil.getConnection();
 
 		// 2.DB에 보낼 DML 작성 및 값 설정
-		String sql = "INSERT INTO Product VALUES(seq_product_prod_no.NEXTVAL,?,?,?,?,?,SYSDATE)";
+		String sql = "INSERT INTO product VALUES(seq_product_prod_no.NEXTVAL,?,?,?,?,?,SYSDATE)";
 		PreparedStatement stmt = con.prepareStatement(sql);
-		System.out.println(product.getManuDate());
 		stmt.setString(1, product.getProdName());
 		stmt.setString(2, product.getProdDetail());
 		stmt.setString(3, product.getManuDate().replaceAll("\\-", ""));
@@ -35,7 +34,7 @@ public class ProductDAO {
 		stmt.setString(5, product.getFileName());
 
 		// 3.실행
-		System.out.println("실행 : " + stmt.executeUpdate());
+		System.out.println("insertProduct 실행 : " + stmt.executeUpdate());
 
 		stmt.close();
 		con.close();
@@ -46,9 +45,15 @@ public class ProductDAO {
 		Connection con = DBUtil.getConnection();
 
 		// 2.DB에 보낼 DML 작성 및 값 설정
-		String sql = "SELECT" + " p.*, t.tran_status_code" + " FROM product p, (SELECT "
-				+ "	prod_no, tran_status_code " + " FROM transaction t " + " WHERE tran_status_code != 0 "
-				+ " OR tran_status_code is null) t" + " WHERE p.prod_no = t.prod_no(+)" + " AND p.prod_no = ?";
+		String sql = "SELECT" 
+				+ " p.*, t.tran_status_code"
+				+ " FROM product p, (SELECT "
+								+ "	prod_no, tran_status_code " 
+								+ " FROM transaction t " 
+								+ " WHERE tran_status_code != 0 "
+								+ " OR tran_status_code is null) t" 
+				+ " WHERE p.prod_no = t.prod_no(+)" 
+				+ " AND p.prod_no = ?";
 		PreparedStatement stmt = con.prepareStatement(sql);
 		stmt.setInt(1, prodNo);
 
@@ -225,10 +230,12 @@ public class ProductDAO {
 
 	// 게시판 currentPage Row 만 return
 	private String makeCurrentPageSql(String sql, Search search) {
-		sql = "SELECT * " + "FROM (		SELECT inner_table. * ,  ROWNUM AS row_seq " + " 	FROM (	" + sql
-				+ " ) inner_table " + "	WHERE ROWNUM <=" + search.getCurrentPage() * search.getPageSize() + " ) "
-				+ "WHERE row_seq BETWEEN " + ((search.getCurrentPage() - 1) * search.getPageSize() + 1) + " AND "
-				+ search.getCurrentPage() * search.getPageSize();
+		sql = "SELECT * " 
+			+ "FROM (		SELECT inner_table. * ,  ROWNUM AS row_seq " 
+						+ " FROM (	" + sql + " ) inner_table " 
+						+ "	WHERE ROWNUM <=" + search.getCurrentPage() * search.getPageSize() + " ) "
+			+ "WHERE row_seq BETWEEN " + ((search.getCurrentPage() - 1) * search.getPageSize() + 1) 
+			+ " AND " + search.getCurrentPage() * search.getPageSize();
 
 		System.out.println("UserDAO :: make SQL :: " + sql);
 
